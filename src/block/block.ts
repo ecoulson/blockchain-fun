@@ -1,8 +1,8 @@
 import SHA256Strategy from "../hash/sha-256-strategy";
 import Difficulty from "./difficulty";
 import Nonce from "./nonce";
-import Timestamp from "./timestamp";
-import Transaction from "./transaction";
+import Timestamp from "../common/timestamp";
+import Transaction from "../transaction/transaction";
 
 interface BlockProps {
   nonce: Nonce;
