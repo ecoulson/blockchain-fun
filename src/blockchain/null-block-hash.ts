@@ -1,7 +1,5 @@
-import IBlockHash from "./block-hash.interface";
-
-export default class NullBlockHash implements IBlockHash {
-  public calculateHash() {
+export default class NullBlockHash {
+  public static get Hash() {
     return "";
   }
 }
