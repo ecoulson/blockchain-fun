@@ -21,8 +21,26 @@ export default class Transaction {
     this.hashingStrategy = new SHA256Strategy();
   }
 
+  get fromAddress() {
+    return this.from;
+  }
+
+  get toAddress() {
+    return this.to;
+  }
+
+  get transactionAmount() {
+    return this.amount;
+  }
+
   isValid() {
-    return false;
+    if (this.from.isSystemAddress()) {
+      return true;
+    }
+    if (!this.signature || !this.signature.isValid()) {
+      throw new Error("No signature on transaction");
+    }
+    return this.from.verifySignature(this.hash, this.signature!);
   }
 
   get hash() {
@@ -30,7 +48,7 @@ export default class Transaction {
   }
 
   sign(signingKey: SigningKey) {
-    if (signingKey.isFrom(this.from)) {
+    if (!signingKey.isFrom(this.from)) {
       throw new Error("Can not sign for other wallets");
     }
     this.signature = signingKey.sign(this.hash);
@@ -38,8 +56,8 @@ export default class Transaction {
 
   serialize() {
     return (
-      this.from.serialize() +
-      this.to.serialize() +
+      this.from.publicKeyInHex +
+      this.to.publicKeyInHex +
       this.timestamp.value +
       this.amount.value
     );

@@ -1,8 +1,8 @@
 export default class Timestamp {
   private timestamp: number;
 
-  constructor() {
-    this.timestamp = Date.now();
+  constructor(date: Date = new Date()) {
+    this.timestamp = date.valueOf();
   }
 
   get value() {

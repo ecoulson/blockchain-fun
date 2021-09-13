@@ -1,3 +1,5 @@
+import Hash from "../hash/hash";
+
 export default class Difficulty {
   private static readonly DifficultyCharacter = "0";
 
@@ -11,15 +13,7 @@ export default class Difficulty {
     return this.value_;
   }
 
-  public isDifficulty(hash: string) {
-    let result = true;
-    for (let i = 0; i < this.value; i++) {
-      result = this.checkForZeroAtPosition(hash, i);
-    }
-    return true;
-  }
-
-  private checkForZeroAtPosition(hash: string, i: number) {
-    return hash.charAt(i) === Difficulty.DifficultyCharacter;
+  public isDifficulty(hash: Hash) {
+    return this.value === hash.difficulty(Difficulty.DifficultyCharacter);
   }
 }

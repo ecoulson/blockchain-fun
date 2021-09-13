@@ -3,21 +3,22 @@ import Difficulty from "./difficulty";
 import Nonce from "./nonce";
 import Timestamp from "../common/timestamp";
 import Transaction from "../transaction/transaction";
+import Hash from "../hash/hash";
 
 interface BlockProps {
   nonce: Nonce;
-  previousHash: string;
+  previousHash: Hash;
   transactions: Transaction[];
   timestamp: Timestamp;
 }
 
 export default class Block {
   private hashingStrategy: SHA256Strategy;
-  private cachedHash: string;
+  private cachedHash: Hash;
   private props: BlockProps;
 
   constructor(
-    previousHash: string,
+    previousHash: Hash,
     transactions: Transaction[],
     timestamp: Timestamp
   ) {
@@ -51,14 +52,17 @@ export default class Block {
     return this.props.timestamp;
   }
 
+  public calculateHash() {
+    return this.hashingStrategy.hash(this.serialize());
+  }
+
   private updateHash() {
-    this.cachedHash = this.hashingStrategy.hash(this.serialize());
+    this.cachedHash = this.calculateHash();
   }
 
   public serialize(): string {
     return (
       this.nonce.value +
-      this.hash +
       JSON.stringify(this.transactions) +
       this.previousHash +
       this.timestamp.value
@@ -70,6 +74,7 @@ export default class Block {
       this.nonce.increment();
       this.updateHash();
     }
+    console.log(`Mined block: ${this.hash.value}`);
   }
 
   public hasValidTransaction() {
